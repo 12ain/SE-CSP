@@ -1,6 +1,6 @@
 # SE-CSP
 
-![icon](/public/logo.png)
+![icon](/public/logo.png){:height="25%" width="25%"}
 
 ## 软件工程内容提交平台
 
