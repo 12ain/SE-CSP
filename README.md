@@ -1,7 +1,8 @@
 # SE-CSP
-📝 软件工程内容提交平台
 
-![icon](/public/favicon.ico)
+![icon](/public/icon.png)
+
+## 软件工程内容提交平台
 
 ## Project setup
 ```
