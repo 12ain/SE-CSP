@@ -1,6 +1,6 @@
 # SE-CSP
 
-![icon](/public/icon.png)
+![icon](/public/logo.png)
 
 ## 软件工程内容提交平台
 
