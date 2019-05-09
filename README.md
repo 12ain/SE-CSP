@@ -1,20 +1,20 @@
-# SE-CSP
+# SE-CSP 软件工程内容提交平台
 
 ![icon](/public/logo.png)
 
-## 软件工程内容提交平台
+## 
 
-## Project setup
+## 加载依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 编译与热加载
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 编译与打包
 ```
 npm run build
 ```
