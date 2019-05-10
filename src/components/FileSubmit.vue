@@ -101,12 +101,9 @@ export default {
     upload() {
       this.file = [];
       for (let i = 0; i < this.uploadFile.length; i++) {
-        console.log(this.uploadFile);
-
         let exName = this.uploadFile[i].name.split(".");
         let newName =
-          this.userID + " " + this.username + "." + exName[exName.length - 1];
-        this.uploadFile[i]["newName"] = newName;
+          this.userID + "" + this.username + "." + exName[exName.length - 1];
         this.$refs.upload.post(this.uploadFile[i]);
       }
     },
