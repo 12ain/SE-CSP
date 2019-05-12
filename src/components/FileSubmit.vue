@@ -62,7 +62,8 @@ export default {
       username: "",
       file: [], // 总文件List
       uploadFile: [], // 需要上传的文件List
-      loadingStatus: false
+      loadingStatus: false,
+      regUserID: /^201602505\d{3}$/
     };
   },
   methods: {
@@ -99,6 +100,13 @@ export default {
       });
     },
     upload() {
+      if (!this.userID || !this.username) {
+        this.$Message.warning("学号或用户名为空");
+        return false;
+      } else if (!this.regUserID.test(this.userID)) {
+        this.$Message.warning("请输入完整学号");
+        return false;
+      }
       this.file = [];
       for (let i = 0; i < this.uploadFile.length; i++) {
         let exName = this.uploadFile[i].name.split(".");

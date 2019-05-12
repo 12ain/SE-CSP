@@ -1,13 +1,19 @@
 <template>
   <div class="Main">
     <p>{{ msg }}</p>
-    <FileSubmit v-if="isOpen"></FileSubmit>
+    <Login class="login"></Login>
+    <div v-if="isOpen">
+      <DeadLine class="deadLine"></DeadLine>
+      <FileSubmit></FileSubmit>
+    </div>
     <Pause v-else></Pause>
   </div>
 </template>
 
 <script>
+import Login from "./Login";
 import FileSubmit from "./FileSubmit";
+import DeadLine from "./DeadLine";
 import Pause from "./Pause";
 export default {
   name: "Main",
@@ -20,7 +26,9 @@ export default {
     };
   },
   components: {
+    Login,
     FileSubmit,
+    DeadLine,
     Pause
   }
 };
@@ -32,5 +40,10 @@ export default {
   font-size: 30px;
   font-weight: 600;
   margin: 0 auto;
+}
+.login {
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>
