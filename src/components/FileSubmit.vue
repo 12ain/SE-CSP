@@ -24,7 +24,7 @@
       v-if="file.length !== 0"
       v-for="(item,index) in file"
     >上传文件: {{ file[index].name }}</div>
-    <div class="information">
+    <!-- <div class="information">
       <Input
         prefix="ios-finger-print"
         size="large"
@@ -40,7 +40,7 @@
         style="width: auto"
         v-model="username"
       />
-    </div>
+    </div>-->
     <div class="submit">
       <Button
         type="success"
@@ -58,21 +58,18 @@ export default {
   name: "FileSubmit",
   data() {
     return {
-      userID: "123",
-      username: "123233",
+      userID: "201602505111",
+      username: "王小明",
       file: [], // 总文件List
       uploadFile: [], // 需要上传的文件List
       loadingStatus: false,
-      regUserID: /^201602505\d{3}$/
+      regUserID: /^201602505\d{3}$/,
+      regFileName: /^201602505\d{3}_[\u4e00-\u9fa5]{2,3}.(zip|rar|7z|doc|docx)$/,
+      formData: new FormData()
     };
   },
   methods: {
     handleUpload(file) {
-      // 随机生成 keyid 值，方便后面删除操作
-      let keyID = Math.random()
-        .toString()
-        .substr(2);
-      file["keyID"] = keyID;
       this.file.push(file);
       this.uploadFile.push(file);
       // 阻止默认事件
@@ -107,14 +104,32 @@ export default {
       //   this.$Message.warning("请输入完整学号");
       //   return false;
       // }
-      // this.file = [];
-      // for (let i = 0; i < this.uploadFile.length; i++) {
-      //   let exName = this.uploadFile[i].name.split(".");
-      //   let newName =
-      //     this.userID + "" + this.username + "." + exName[exName.length - 1];
-      //   this.$refs.upload.post(this.uploadFile[i]);
-      // }
-      this.sendMsg();
+      this.file = [];
+      if (this.uploadFile.length > 1) {
+        this.$Message.error({
+          content: "多文件上传功能未开通",
+          duration: 1
+        });
+        this.reset();
+        return;
+      }
+      for (let i = 0; i < 1; i++) {
+        // let exName = this.uploadFile[i].name.split(".");
+        // let newName =
+        //   this.userID + "" + this.username + "." + exName[exName.length - 1];
+        // this.formData.append("file", this.uploadFile[i]);
+        // this.formData.append("newName", newName);
+        // this.formData.forEach(v => console.log(v));
+
+        if (!this.regFileName.test(this.uploadFile[i].name)) {
+          this.$Message.error({
+            content: "文件由完整学号+姓名+后缀名组成，如201602505000张三.rar",
+            duration: 3
+          });
+        } else {
+          this.$refs.upload.post(this.uploadFile[i]);
+        }
+      }
     },
     reset() {
       this.userID = "";
@@ -138,29 +153,17 @@ export default {
       }, 1500);
     },
     sendMsg() {
-      console.log(this.uploadFile[0]);
-      
-      var myform = new FormData();
-      myform.append("file", this.uploadFile[0])
-      console.log(myform);
-      myform.append("userID", this.userID);
-      
+      // 带参上传，搁置
       this.axios
         .post("/fileSystem.php", {
-          userID: this.userID,
-          username: myform
+          userID: this.formData,
+          username: this.username
         })
         .then(Response => {
-          console.log(Response);
-
           if (Response.data == 200) {
-            this.changeAuth();
-            this.$Message.success("登陆成功");
-            setTimeout(() => {
-              this.$router.push({ path: "/admin" });
-            }, 500);
+            this.$Message.success("上传成功");
           } else {
-            this.$Message.error("账号或密码错误");
+            this.$Message.error("上传失败");
           }
         })
         .catch(error => {
@@ -177,8 +180,8 @@ export default {
   margin: 20px 0 0;
 }
 .submit * {
-  width: 15%;
-  margin: 20px 10px 0;
+  width: 20%;
+  margin: 35px 10px 0;
 }
 .uploadFiled {
   margin: 10px auto 0;
