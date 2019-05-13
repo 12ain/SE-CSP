@@ -2,7 +2,7 @@
   <div class="Login">
     <Form ref="formInline" :model="formInline">
       <FormItem prop="user">
-        <Input type="text" v-model="formInline.user" placeholder="管理员用户名">
+        <Input type="text" v-model="formInline.userName" placeholder="管理员用户名">
           <Icon type="ios-person-outline" slot="prepend"></Icon>
         </Input>
       </FormItem>
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       formInline: {
-        user: "",
+        userName: "",
         password: ""
       }
     };
@@ -34,18 +34,26 @@ export default {
   },
   methods: {
     ...mapMutations(["changeAuth"]),
-    handleSubmit(name) {
-      this.$refs[name].validate(valid => {
-        if (valid) {
-          this.changeAuth();
-          this.$Message.success("登陆成功");
-          setTimeout(() => {
-            this.$router.push({ path: "/admin" });
-          }, 1000);
-        } else {
-          this.$Message.error("登陆失败");
-        }
-      });
+    handleSubmit() {
+      this.axios
+        .post("/login_process.php", {
+          userName: this.formInline.userName,
+          password: this.formInline.password
+        })
+        .then(Response => {
+          if (Response.data == 200) {
+            this.changeAuth();
+            this.$Message.success("登陆成功");
+            setTimeout(() => {
+              this.$router.push({ path: "/admin" });
+            }, 500);
+          } else {
+            this.$Message.error("账号或密码错误");
+          }
+        })
+        .catch(error => {
+          this.$Message.error("未知错误");
+        });
     }
   }
 };

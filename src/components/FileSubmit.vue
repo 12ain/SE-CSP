@@ -5,7 +5,7 @@
       multiple
       ref="upload"
       type="drag"
-      action="http://b.rebright.top/fileSystem.php"
+      action="https://submit.rebright.top/fileSystem.php"
       :max-size="204800"
       :on-exceeded-size="handleMaxSize"
       :format="['doc', 'docx', 'pdf', 'rar', '7z', 'zip']"
@@ -58,8 +58,8 @@ export default {
   name: "FileSubmit",
   data() {
     return {
-      userID: "",
-      username: "",
+      userID: "123",
+      username: "123233",
       file: [], // 总文件List
       uploadFile: [], // 需要上传的文件List
       loadingStatus: false,
@@ -100,20 +100,21 @@ export default {
       });
     },
     upload() {
-      if (!this.userID || !this.username) {
-        this.$Message.warning("学号或用户名为空");
-        return false;
-      } else if (!this.regUserID.test(this.userID)) {
-        this.$Message.warning("请输入完整学号");
-        return false;
-      }
-      this.file = [];
-      for (let i = 0; i < this.uploadFile.length; i++) {
-        let exName = this.uploadFile[i].name.split(".");
-        let newName =
-          this.userID + "" + this.username + "." + exName[exName.length - 1];
-        this.$refs.upload.post(this.uploadFile[i]);
-      }
+      // if (!this.userID || !this.username) {
+      //   this.$Message.warning("学号或用户名为空");
+      //   return false;
+      // } else if (!this.regUserID.test(this.userID)) {
+      //   this.$Message.warning("请输入完整学号");
+      //   return false;
+      // }
+      // this.file = [];
+      // for (let i = 0; i < this.uploadFile.length; i++) {
+      //   let exName = this.uploadFile[i].name.split(".");
+      //   let newName =
+      //     this.userID + "" + this.username + "." + exName[exName.length - 1];
+      //   this.$refs.upload.post(this.uploadFile[i]);
+      // }
+      this.sendMsg();
     },
     reset() {
       this.userID = "";
@@ -135,6 +136,36 @@ export default {
         this.loadingStatus = false;
         this.$Message.warning("上传失败");
       }, 1500);
+    },
+    sendMsg() {
+      console.log(this.uploadFile[0]);
+      
+      var myform = new FormData();
+      myform.append("file", this.uploadFile[0])
+      console.log(myform);
+      myform.append("userID", this.userID);
+      
+      this.axios
+        .post("/fileSystem.php", {
+          userID: this.userID,
+          username: myform
+        })
+        .then(Response => {
+          console.log(Response);
+
+          if (Response.data == 200) {
+            this.changeAuth();
+            this.$Message.success("登陆成功");
+            setTimeout(() => {
+              this.$router.push({ path: "/admin" });
+            }, 500);
+          } else {
+            this.$Message.error("账号或密码错误");
+          }
+        })
+        .catch(error => {
+          this.$Message.error("未知错误");
+        });
     }
   }
 };
