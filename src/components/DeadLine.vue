@@ -18,12 +18,23 @@ export default {
   },
   mounted() {
     // 第一秒问题
+      this.getDeadLine();
     this.getRunTime();
     this.timer = setInterval(() => {
       this.getRunTime();
     }, 1000);
   },
   methods: {
+    getDeadLine() {
+      this.axios
+        .post("/deadLine.php")
+        .then(Response => {
+          console.log(Response);
+        })
+        .catch(error => {
+          this.$Message.error("未知错误");
+        });
+    },
     getRunTime() {
       var duration = (this.time3 - this.runTimes) * 1000;
       this.nDay = Math.floor(duration / (1000 * 60 * 60) / 24);

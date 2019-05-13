@@ -1,10 +1,10 @@
 <template>
   <div class="About">
     <h1>后台管理页面</h1>
-    <DatePicker :value="endDate" confirm type="date" placeholder="选择截止日期" style="width: 200px"></DatePicker>
+    <DatePicker v-model="endDate" confirm type="date" placeholder="选择截止日期" style="width: 200px"></DatePicker>
     <br>
     <TimePicker
-      :value="endTime"
+      v-model="endTime"
       confirm
       type="time"
       format="HH:mm"
@@ -27,18 +27,16 @@ export default {
     };
   },
   methods: {
-    selectData() {
+    submit() {
+      console.log(this.endDate + this.endTime);
       if (this.endDate != "" && this.endTime != "") {
-        axios
-          .post("", {
-            yearMonth: time
+        this.axios
+          .post("/deadLine.php", {
+            yearMonth: this.endDate,
           })
           .then(res => {
-            this.updateBill({
-              billList: res.data.billList,
-              totalIncome: res.data.totalIncome,
-              totalPay: res.data.totalPay
-            });
+            console.log(res);
+            
           })
           .catch();
       }
