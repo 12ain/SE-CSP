@@ -5,10 +5,10 @@
       multiple
       ref="upload"
       type="drag"
-      action="https://submit.rebright.top/fileSystem.php"
+      action="http://localhost/ex/upload.php"
       :max-size="204800"
       :on-exceeded-size="handleMaxSize"
-      :format="['doc', 'docx', 'pdf', 'rar', '7z', 'zip']"
+      :format="['doc', 'docx', 'pdf', 'rar', '7z', 'zip', 'png']"
       :on-format-error="handleFormatError"
       :before-upload="handleUpload"
       :on-success="uploadSuccess"
@@ -19,11 +19,14 @@
         <p>点 击 或 拖 拽 文 件 进 行 上 传</p>
       </div>
     </Upload>
-    <div
-      class="uploadList"
-      v-if="file.length !== 0"
-      v-for="(item,index) in file"
-    >上传文件: {{ file[index].name }}</div>
+    <div v-if="file.length !== 0">
+        <div
+          class="uploadList"
+          v-for="(item,index) in file"
+          :key="item"
+        >上传文件: {{ file[index].name }}</div>
+    </div>
+    
     <!-- <div class="information">
       <Input
         prefix="ios-finger-print"
@@ -121,14 +124,14 @@ export default {
         // this.formData.append("newName", newName);
         // this.formData.forEach(v => console.log(v));
 
-        if (!this.regFileName.test(this.uploadFile[i].name)) {
-          this.$Message.error({
-            content: "文件由完整学号+姓名+后缀名组成，如201602505000张三.rar",
-            duration: 3
-          });
-        } else {
+        // if (!this.regFileName.test(this.uploadFile[i].name)) {
+        //   this.$Message.error({
+        //     content: "文件由完整学号+姓名+后缀名组成，如201602505000张三.rar",
+        //     duration: 3
+        //   });
+        // } else {
           this.$refs.upload.post(this.uploadFile[i]);
-        }
+        // }
       }
     },
     reset() {
@@ -160,6 +163,7 @@ export default {
           username: this.username
         })
         .then(Response => {
+          console.log(Response)
           if (Response.data == 200) {
             this.$Message.success("上传成功");
           } else {
